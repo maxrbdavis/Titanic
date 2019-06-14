@@ -1,0 +1,70 @@
+Project: Data Wrangling Exercise 2: Dealing with missing values
+
+Max Davis
+June 14, 2019
+
+```{r}
+
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+
+titanic <- tbl_df(titanic_original)
+
+View(titanic)
+```
+
+
+#1. Change NAs in embarked column to "S".
+
+```{r}
+
+titanic$embarked[is.na(titanic$embarked)] <- "S"
+
+View(titanic)
+
+```
+
+#2. Populate missing Age values with mean of Age column.
+
+```{r}
+
+age_mean <- mean(titanic$age, na.rm = TRUE)  
+
+titanic$age <-
+  titanic$age %>%
+  replace_na(age_mean)
+
+View(titanic)
+```
+
+#3. Fill empty slots in "boat" with 'None' or 'NA'
+
+```{r}
+
+titanic$boat <- na_if(titanic$boat, "")
+View(titanic)
+```
+
+```{r}
+
+titanic$boat <- titanic$boat %>%
+  replace_na("None")
+
+```  
+
+#4 Create has_cabin_number variable
+```{r}
+
+titanic <- titanic %>%
+  mutate(has_cabin_number = as.numeric(!is.na(cabin)))
+ 
+```  
+
+#5 Write titanic_clean.csv
+
+```{r}
+write_csv(titanic, "titanic_clean.csv")
+```
+
